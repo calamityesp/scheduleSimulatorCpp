@@ -3,10 +3,11 @@
 using namespace std;
  
 #define SIZE 1000
- 
+
+template <class T> 
 class Queue
 {
-    int *arr;       
+    T *arr;       
     int capacity;   
     int front;      
     int rear;       
@@ -16,28 +17,33 @@ public:
     Queue(int size = SIZE);     
     ~Queue();                   
  
-    int dequeue();
-    void enqueue(int x);
+    T dequeue();
+    void enqueue(T x);
     int peek();
     int size();
     bool isEmpty();
     bool isFull();
 };
- 
-Queue::Queue(int size)
+
+template <class T>
+Queue<T>::Queue(int size)
 {
-    arr = new int[size];
+    arr = new T[size];
     capacity = size;
     front = 0;
     rear = -1;
     count = 0;
 }
- 
-Queue::~Queue() {
+
+
+template <class T>
+Queue<T>::~Queue() {
     delete[] arr;
 }
- 
-int Queue::dequeue()
+
+
+template <class T>
+T Queue<T>::dequeue()
 {
     if (isEmpty())
     {
@@ -45,8 +51,7 @@ int Queue::dequeue()
         exit(EXIT_FAILURE);
     }
  
-    int x = arr[front];
-    cout << "Removing " << x << endl;
+    T x = arr[front];
  
     front = (front + 1) % capacity;
     count--;
@@ -54,22 +59,24 @@ int Queue::dequeue()
     return x;
 }
  
-void Queue::enqueue(int item)
+
+template <class T>
+void Queue<T>::enqueue(T item)
 {
     if (isFull())
     {
         cout << "Overflow\nProgram Terminated\n";
         exit(EXIT_FAILURE);
-    }
- 
-    cout << "Inserting " << item << endl;
+    }    
  
     rear = (rear + 1) % capacity;
     arr[rear] = item;
     count++;
 }
- 
-int Queue::peek()
+
+
+template <class T>
+int Queue<T>::peek()
 {
     if (isEmpty())
     {
@@ -78,16 +85,19 @@ int Queue::peek()
     }
     return arr[front];
 }
- 
-int Queue::size() {
+
+template <class T>
+int Queue<T>::size() {
     return count;
 }
- 
-bool Queue::isEmpty() {
+
+template <class T>
+bool Queue<T>::isEmpty() {
     return (size() == 0);
 }
- 
-bool Queue::isFull() {
+
+template <class T>
+bool Queue<T>::isFull() {
     return (size() == capacity);
 }
  

@@ -1,31 +1,37 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <iomanip>
 #include "queue.cpp"
+
+#define MAXTIME 25
 
 using namespace std;
 
 typedef struct pcb
 {
     int pid;
-    int priority;
     int arrivalTime;
     int CPUburst;
-    int IOburst;
-    int CPUremainingTime;
-    int IOremainingTime;
+    int priority;
+    int finish;
     int waitingTime;
     int turnaroundTime;
     int responseTime;
+    int NumContext;
+    bool isRunning = false;
 } process_t;
 
 
 //function prototypes
+int FCFS( vector<process_t> processList);
+void printHeader();
 
 
 int main(int argc, char *argv[])
 {
-    process_t processList[100];     
+    vector<process_t> processes;   
     ifstream inFile("input10.txt");
     int algorithmSelection;
     int counter = 0;
@@ -37,8 +43,8 @@ int main(int argc, char *argv[])
     {
         process_t process;
         inFile >> process.pid >> process.arrivalTime >> process.CPUburst >> process.priority;
-        processList[counter] = process;
-        cout << "Print PID: " << processList[counter].pid << endl;
+        processes.push_back(process);
+        cout << processes[counter].arrivalTime << endl;   
         counter++;
     }
     //reset counter 
@@ -54,7 +60,7 @@ int main(int argc, char *argv[])
     switch (algorithmSelection)
     {
     case 1:
-        /* code */
+        FCFS(processes);
         break;
     case 2:
         break;
@@ -62,6 +68,64 @@ int main(int argc, char *argv[])
         break;
     default:
         break;
+    }
+
+    return 0;
+}
+
+void printHeader()
+{    
+    cout <<"PID " << setw(13) << right << "| Arrival " << setw(12);
+    cout <<"| Burst " << setw(13) << "| Priority " << setw(12);
+    cout <<"| Finish " << setw(17) << "| Waiting Time" << setw(17);
+    cout <<"| Turn Around " << setw(18) << "| Response Time " << setw(18) << "| N0. of Context" << endl;
+}
+
+
+int FCFS( vector<process_t> processList)
+{
+    Queue<process_t> readyQueue;
+    int listSize = processList.size();
+    process_t running;
+    int totalCpuTime;
+    int previousStop = 0;
+
+    cout << "List size: " << listSize << endl;
+
+    //sort the list by the arrival time 
+    //let i = time, j = number of elements in the vector 
+    for (int i = 0; i <  listSize; i++)
+    {
+        readyQueue.enqueue(processList[i]);
+        totalCpuTime += processList[i].CPUburst;
+        /*loop through the remaining list to sort the values 
+        for (int j = 0 ; j < listSize; j++)
+        {
+            if (processList[j].arrivalTime == i)
+            {
+                readyQueue.enqueue(processList[j]);                
+                break;
+            }
+        }*/
+    }
+
+
+    running = readyQueue.dequeue();
+    printHeader();
+
+    for (int i = 0; i < listSize; i++ )
+    {
+        running.waitingTime = running.arrivalTime/1;
+        running.turnaroundTime = running.CPUburst;
+        running.finish = running.arrivalTime + running.CPUburst;
+        running.responseTime = running.arrivalTime + previousStop;
+        cout << running.pid << setw(13) << right << running.arrivalTime << setw(12);
+        cout <<running.CPUburst << setw(13) << running.priority << setw(12);
+        cout << running.arrivalTime << setw(17) << "| Waiting Time" << setw(17);
+        cout <<"| Turn Around " << setw(18) << "| Response Time " << setw(18) << "| N0. of Context" << endl;
+        
+
+        previousStop = running.finish;
     }
 
     return 0;
