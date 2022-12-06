@@ -19,7 +19,7 @@ public:
  
     T dequeue();
     void enqueue(T x);
-    int peek();
+    T peek();
     int size();
     bool isEmpty();
     bool isFull();
@@ -76,7 +76,7 @@ void Queue<T>::enqueue(T item)
 
 
 template <class T>
-int Queue<T>::peek()
+T Queue<T>::peek()
 {
     if (isEmpty())
     {
