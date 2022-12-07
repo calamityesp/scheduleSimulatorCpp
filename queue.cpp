@@ -19,10 +19,11 @@ public:
  
     T dequeue();
     void enqueue(T x);
-    T peek();
+    T peek();    
     int size();
     bool isEmpty();
     bool isFull();
+    T & accessFront();
 };
 
 template <class T>
@@ -83,6 +84,12 @@ T Queue<T>::peek()
         cout << "Underflow\nProgram Terminated\n";
         exit(EXIT_FAILURE);
     }
+    return arr[front];
+}
+
+template <class T>
+T & Queue<T>::accessFront()
+{
     return arr[front];
 }
 
